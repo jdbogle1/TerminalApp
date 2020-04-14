@@ -1,0 +1,9 @@
+body {
+background: black;
+color:white;
+}
+input {
+	background: transparent;
+	border: none;
+	color: inherit;
+}

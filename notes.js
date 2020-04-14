@@ -1,4 +1,5 @@
 /*
+shorthand css allows you to put multiple style elements on one line
 
 
 
