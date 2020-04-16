@@ -1,9 +1,21 @@
+@font-face {
+	font-family: monospace;
+	src: url("FiraCode.tff")
+}
 body {
-background: black;
+background: rgb(16, 24, 59);
 color:white;
+font-family: "lucida console"
 }
 input {
+	font-family: monospace;
 	background: transparent;
 	border: none;
-	color: inherit;
+	color: white;
+	border-right: 10px solid white
+	
+}
+
+input:active{
+	resize: auto;
 }
