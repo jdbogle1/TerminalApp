@@ -12,8 +12,14 @@ input {
 	background: transparent;
 	border: none;
 	color: white;
-	border-right: 10px solid white
-	
+}
+input:focus{
+	outline: none;
+}
+#cInput {
+	width: 10px;
+	border-right: 10px solid white;	
+
 }
 
 input:active{

@@ -13,5 +13,14 @@ judge how to code based on the size of the project (e.g. inherit for larger proj
 MVC Pattern; Model represents the data, View is what the user sees, Controller controls how to display to the user and how to handle data. Don't mix view with data.
 
 **Task:**
-
+1. Split the string
+2. Add logic based on the order
+- string recognition code to identify a command
+- command
+- each command must process flags and values
+_Knowledge needed_
+- javascript
+- strings and comparisons
+- string operations e.g. explode and Split
+- arrays and access
 ## 21st April
