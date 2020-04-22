@@ -24,3 +24,23 @@ _Knowledge needed_
 - string operations e.g. explode and Split
 - arrays and access
 ## 21st April
+https://stackoverflow.com/questions/32204947/valid-architecture-for-a-message-queue-worker-system-in-php
+
+**Objectives:**
+- Learn the coding styles/rules/nomenclature etc. (e.g. -flag, -g for output beautifiers)
+- Mindmap workflows that would benefit your employer
+**Task:** *inherit*
+- Use localStorage instead of note files
+- Just in case the code breaks whilst running, you might encounter
+a) partially written data to the file
+b) no data saved to file
+- Complete a cheat sheet of commands you would like to implement
+- List bookmarks/questions (use flags)
+- save
+- report qa performance
+- plantUML diagram based on how commands are processed 
+
+
+**Stretch Task**
+- Add a status icon to show internet connectivity
+
