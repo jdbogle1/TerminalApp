@@ -23,7 +23,7 @@ const comSynt = ['log.[Text].[Storage Tag].[ID Number(optional)]',
     'copy.[Storage Tag].[ID Number]',
     'google.[Storage Tag].[ID Number]'];
 const errInp = "The function you have entered is not recognized or you have used the incorrect syntax. Type 'help' for a list of available functions.";
-const errRead = "There isn't a note stored with the tag and ID you entered, please try again.";
+const errRead = ["Please enter a valid ID or 'all' to read a stored note.", "There isn't a note stored with the tag and ID you entered, please try again."];
 const errUnk = "Encountered an unknown error. Aborting the command..."
 //Non-Command Functions
 function hitEnter() {
@@ -90,10 +90,13 @@ function process(flag) {
     mainFunc = flag.split('.')[0];
     console.log(mainFunc);
     if (mainFunc == 'log') {
-        console.log("hello")
-        log(cInput)
+        log(cInput);
+    } else if (mainFunc == 'read') {
+        read(cInput);
     } else if (mainFunc == 'help') {
-        help(cInput)
+        help(cInput);
+    } else if (mainFunc=='copy'){
+        copy(cInput);
     } else {
         //Occurs when the user inputs an unrecognised command
         funcLine(errInp, msgType[2]);
@@ -126,10 +129,10 @@ function log(flag) {
         index = 0;
     } else {
         if (flag.split('.').length < 4) {
-            index += 1;
+            index = parseInt(localStorage.getItem(tag)) + 1;
         }
         else {
-            index = flag.split('.')[3];
+            index = parseInt(flag.split('.')[3]);
         }
     }
     storageKey = tag + index.toString();
@@ -149,9 +152,31 @@ function help(flag) {
     }
 }
 function read(flag) {
-    if (typeof flag.split('.')[2]=="string" && flag.split('.')[2]=="all"){
-
-    } else if (typeof flag.split('.')[2]=="number")
+    var gotText;
+    tag = flag.split('.')[1];
+    index = parseInt(flag.split('.')[2]);
+    if (Number.isNaN(index) && flag.split('.')[2] == "all") {
+        gotText="Retrived notes from: "+tag;
+        funcLine(gotText,msgType[1]);
+        for (var i = 0; i <= parseInt(localStorage.getItem(tag)); i++){
+            storageKey=tag+i.toString();
+            text=localStorage.getItem(storageKey);
+            funcLine(text,msgType[1])
+        }
+            console.log("if");
+    } else if (Number.isInteger(index)) {
+        if (localStorage.getItem(tag) == null) {
+            funcLine(errRead[1], msgType[2]);
+        } else {
+            storageKey = tag + index.toString();
+            text = localStorage.getItem(storageKey);
+            gotText = "Retrived note from: " + storageKey;
+            funcLine(gotText, msgType[1]);
+            funcLine(text, msgType[1]);
+        }
+    } else {
+        funcLine(errRead[0], msgType[2]);
+    }
 }
 function edit(flag) {
 
@@ -159,10 +184,30 @@ function edit(flag) {
 function del(flag) {
 
 }
-function copy() {
+function copy(flag) {
+    tag = flag.split('.')[1];
+    index = flag.split('.')[2];
+    storageKey=tag+index;
+    funcLine("Copied:",msgType[1]);
+    
+    lineOld = document.createElement("p");
+    textOld = document.createTextNode(text)
+    lineOld.append(textOld);
+    lineOld.setAttribute("class", clas)
+    mainDiv = document.getElementById("main");
+    mainDiv.appendChild(lineOld);
 
+    text=localStorage.getItem(storageKey);
+    text.select()
+    document.execCommand("copy");
 }
 function google() {
+
+}
+function remind(){
+
+}
+function format(){
 
 }
 
