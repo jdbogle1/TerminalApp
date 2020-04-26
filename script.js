@@ -2,7 +2,7 @@
 var cInput; //Current Input Value
 var mainFunc;
 var subFunc;
-var mainArg;
+var arg;
 var split;
 var cLen = 10;
 var blStat = 0;
@@ -18,14 +18,17 @@ const msgType = ["log", "output", "error"];
 const comName = ['log', 'read', 'edit', 'del', 'copy', 'google', 'remind', 'format'];
 const comSynt = ['log.[Text].[Storage Tag].[ID Number(optional)]',
     'read.[Storage Tag].[ID Number]',
-    'edit.[Edit type].[Storage Tag].[ID Number]',
+    'edit.[Edit Type].[Text].[Storage Tag].[ID Number]',
     'del.[Storage Tag].[ID Number]',
     'copy.[Storage Tag].[ID Number]',
     'google.[Storage Tag].[ID Number]',
+    'remind.[Remind Type].[Text].[DD/MM/YYYY]',
     'format.[Format Type].[Format Style]'];
-const errInp = "The function you have entered is not recognized or you have used the incorrect syntax. Type 'help' for a list of available functions.";
+const errInp = "The function you have entered is not recognised or you have used the incorrect syntax. Type 'help' for a list of available functions.";
 const errRead = ["Please enter a valid ID or 'all' to read a stored note.", "There isn't a note stored with the tag and ID you entered, please try again."];
-const errUnk = "Encountered an unknown error. Aborting the command..."
+const errEdi = "That is not a recognised edit mode, use help.edit for a list of available modes."
+const errUnk = "Encountered an unknown error. Aborting the command...";
+const errFor = ["That is not one of the recognised format options, use help.format for a list of available options.", "That is not a recognised setting for this option, please try again."]
 //Non-Command Functions
 function hitEnter() {
     //Gets inputed text and which character
@@ -42,6 +45,7 @@ function hitEnter() {
     }
     inpWidth = cLen.toString() + "px";
     document.getElementsByClassName("cInput")[0].style.width = inpWidth;
+
     //Process Function
     if (x == 13) {
         //Append
@@ -102,6 +106,8 @@ function process(flag) {
         copy(cInput);
     } else if (mainFunc == 'google') {
         google(cInput);
+    } else if (mainFunc == 'format') {
+        format(cInput);
     } else {
         //Occurs when the user inputs an unrecognised command
         funcLine(errInp, msgType[2]);
@@ -151,10 +157,13 @@ function log(flag) {
 function help(flag) {
     com = flag.split('.')[1];
     if (flag.split('.').length == 2) {
-        if (com == 'log') {
-            var helpText = "The syntax for the command you entered is: ";
-            funcLine(helpText, msgType[1]);
-            funcLine(comSynt[0],msgType[1]);
+        for (var i = 0; i < comName.length; i++) {
+            console.log(comName[i],flag.split('.')[1]);
+            if (flag.split('.')[1] == comName[i]) {
+                var helpText = "The syntax for the command you entered is: ";
+                funcLine(helpText, msgType[1]);
+                funcLine(comSynt[i], msgType[1]);
+            }
         }
         for (var i = 0; i < comName.length; i++) {
             if (flag.split('.')[1] == i) {
@@ -199,7 +208,26 @@ function read(flag) {
     }
 }
 function edit(flag) {
-
+    var mode = flag.split('.')[1];
+    var text = flag.split('.')[2];
+    tag = flag.split('.')[3];
+    index = flag.split('.')[4];
+    storageKey = tag + index;
+    if (localStorage.getItem(storageKey) == null) {
+        funcLine(errRead[0], msgType[2])
+    } else {
+        if (mode == 'a' || 'append') {
+            text = localStorage.getItem(storageKey) + text;
+            localStorage.setItem(storageKey, text);
+        } else if (mode == 'p' || 'prepend') {
+            text += localStorage.getItem(storageKey);
+            localStorage.setItem(storageKey, text);
+        } else if (mode == 'r' || 'replace') {
+            localStorage.setItem(storageKey, text);
+        } else {
+            funcLine(errEdi, msgType[2])
+        }
+    }
 }
 function del(flag) {
     var delText;
@@ -243,24 +271,43 @@ function copy(flag) {
     mainDiv.removeChild(tempInput);
 }
 function google(flag) {
-    // tag = flag.split('.')[1];
-    // index = flag.split('.')[2];
-    // storageKey = tag + index;
-    // var gText=localStorage.getItem(storageKey);
-    // gArray=gText.split("")
-    // var qURL=""
-    // for(var i=0;i<gArray.length();i++){
-    //     if (gArray==" "){
-
-    //     }
-    // }
-    // gURL="https://www.google.com/search?q="+
-    // window.open("https://www.w3schools.com");
+    tag = flag.split('.')[1];
+    index = flag.split('.')[2];
+    storageKey = tag + index;
+    var gText = localStorage.getItem(storageKey);
+    gArray = gText.split("");
+    var qURL = "";
+    for (var i = 0; i < gArray.length; i++) {
+        console.log(gArray[i])
+        if (gArray[i] == " ") {
+            gArray[i] = "+"
+        }
+        qURL += gArray[i];
+    }
+    gURL = "https://www.google.com/search?q=" + qURL;
+    window.open(gURL);
 }
 function remind() {
 
 }
-function format() {
-
+function format(flag) {
+    subFunc = flag.split('.')[1];
+    arg = flag.split('.')[2];
+    var docBody = document.getElementsByTagName("body")[0];
+    var docIn = document.getElementsByTagName("input")[0];
+    if (subFunc == 'bg') {
+        if (arg == 'dark') {
+            docBody.style.backgroundColor = "#10183b";
+            docIn.style.textShadow = "ffffff";
+        } else if (arg == 'light') {
+            docBody.style.backgroundColor = "#ffffff";
+            docIn.style.textShadow = "#10183b";
+        }
+        else {
+            funcLine(errFor[1], msgType[2]);
+        }
+    } else {
+        funcLine(errFor[0], msgType[2]);
+    }
 }
 
