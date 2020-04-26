@@ -16,19 +16,21 @@ var mainDiv;
 var syntax;
 const msgType = ["log", "output", "error"];
 const comName = ['log', 'read', 'edit', 'del', 'copy', 'google', 'remind', 'format'];
-const comSynt = ['log.[Text].[Storage Tag].[ID Number(optional)]',
+const comSynt = [
+    'log.[Text].[Storage Tag].[ID Number(optional)]',
     'read.[Storage Tag].[ID Number]',
     'edit.[Edit Type].[Text].[Storage Tag].[ID Number]',
     'del.[Storage Tag].[ID Number]',
     'copy.[Storage Tag].[ID Number]',
     'google.[Storage Tag].[ID Number]',
     'remind.[Remind Type].[Text].[DD/MM/YYYY]',
-    'format.[Format Type].[Format Style]'];
+    'format.[Format Type].[Format Style]'
+    ];
 const errInp = "The function you have entered is not recognised or you have used the incorrect syntax. Type 'help' for a list of available functions.";
 const errRead = ["Please enter a valid ID or 'all' to read a stored note.", "There isn't a note stored with the tag and ID you entered, please try again."];
 const errEdi = "That is not a recognised edit mode, use help.edit for a list of available modes."
 const errUnk = "Encountered an unknown error. Aborting the command...";
-const errFor = ["That is not one of the recognised format options, use help.format for a list of available options.", "That is not a recognised setting for this option, please try again."]
+const errFor = ["That is not one of the recognised format options, use help.format for a list of available options.", "That is not a recognised setting for this option, please try again."];
 //Non-Command Functions
 function hitEnter() {
     //Gets inputed text and which character
@@ -81,12 +83,12 @@ function newLine() {
     process(cInput);
     //Proceeds to next line
     lineNew = document.createElement("input");
-    mainDiv.appendChild(lineNew)
+    mainDiv.appendChild(lineNew);
     lineNew.setAttribute("class", "cInput")
     lineNew.setAttribute("autocomplete", "off")
     lineNew.focus();
-    lineNew.setAttribute("spellcheck", "off")
-    lineNew.setAttribute("onkeypress", "hitEnter()")
+    lineNew.setAttribute("spellcheck", "off");
+    lineNew.setAttribute("onkeypress", "hitEnter()");
 
 
 }
@@ -108,6 +110,8 @@ function process(flag) {
         google(cInput);
     } else if (mainFunc == 'format') {
         format(cInput);
+    } else if (mainFunc == 'remind'){
+        remind(cInput);
     } else {
         //Occurs when the user inputs an unrecognised command
         funcLine(errInp, msgType[2]);
@@ -158,7 +162,7 @@ function help(flag) {
     com = flag.split('.')[1];
     if (flag.split('.').length == 2) {
         for (var i = 0; i < comName.length; i++) {
-            console.log(comName[i],flag.split('.')[1]);
+            console.log(comName[i], flag.split('.')[1]);
             if (flag.split('.')[1] == comName[i]) {
                 var helpText = "The syntax for the command you entered is: ";
                 funcLine(helpText, msgType[1]);
@@ -287,8 +291,36 @@ function google(flag) {
     gURL = "https://www.google.com/search?q=" + qURL;
     window.open(gURL);
 }
-function remind() {
-
+function remind(flag) {
+    var type = flag.split('.')[1];
+    var text = flag.split('.')[2];
+    var dateInp = flag.split('.')[3];
+    if (type == 'log') {
+        localStorage.setItem(dateF, text);
+    } else if (type == 'read') {
+        if (flag.split('.').length == 4) {
+            var remText="Your reminder for"+dateInp+"is:";
+            funcLine(remText,msgType[1]);
+            funcLine(localStorage.getItem(dateInp),msgType[1]);
+        } else if (flag.split('.').length == 3) {
+            var today = new Date();
+            var tomorrow=new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var day=tomorrow.getDate().toString;
+            var month=tomorrow.getMonth()+1;
+            month=month.toString;
+            var year=tomorrow.getFullYear().toString;
+            var dateA = day+"/"+month+"/"+year;
+            var remText="Your reminder for tommorow is: ";
+            funcLine(remText,msgType[1]);
+            funcLine(localStorage.getItem(dateA),msgType[1]);
+        }
+        else {
+            funcLine(errInp,msgType[2]);
+        }
+    } else {
+        funcLine(errInp,msgType[2]);
+    }
 }
 function format(flag) {
     subFunc = flag.split('.')[1];
