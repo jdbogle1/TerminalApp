@@ -25,7 +25,7 @@ const comSynt = [
     'google.[Storage Tag].[ID Number]',
     'remind.[Remind Type].[Text].[DD/MM/YYYY]',
     'format.[Format Type].[Format Style]'
-    ];
+];
 const errInp = "The function you have entered is not recognised or you have used the incorrect syntax. Type 'help' for a list of available functions.";
 const errRead = ["Please enter a valid ID or 'all' to read a stored note.", "There isn't a note stored with the tag and ID you entered, please try again."];
 const errEdi = "That is not a recognised edit mode, use help.edit for a list of available modes."
@@ -48,7 +48,7 @@ function hitEnter() {
     inpWidth = cLen.toString() + "px";
     document.getElementsByClassName("cInput")[0].style.width = inpWidth;
 
-    //Process Function
+    //process Function
     if (x == 13) {
         //Append
         newLine();
@@ -80,7 +80,7 @@ function newLine() {
     mainDiv = document.getElementById("main");
     mainDiv.appendChild(lineOld);
     //Runs a function
-    process(cInput);
+    processCommand(cInput);
     //Proceeds to next line
     lineNew = document.createElement("input");
     mainDiv.appendChild(lineNew);
@@ -92,7 +92,7 @@ function newLine() {
 
 
 }
-function process(flag) {
+function processCommand(flag) {
     //Determines which function is required
     mainFunc = flag.split('.')[0];
     console.log(mainFunc);
@@ -102,6 +102,8 @@ function process(flag) {
         read(cInput);
     } else if (mainFunc == 'del') {
         del(cInput);
+    } else if (mainFunc == 'edit') {
+        edit(cInput);
     } else if (mainFunc == 'help') {
         help(cInput);
     } else if (mainFunc == 'copy') {
@@ -110,7 +112,7 @@ function process(flag) {
         google(cInput);
     } else if (mainFunc == 'format') {
         format(cInput);
-    } else if (mainFunc == 'remind'){
+    } else if (mainFunc == 'remind') {
         remind(cInput);
     } else {
         //Occurs when the user inputs an unrecognised command
@@ -254,7 +256,7 @@ function del(flag) {
             localStorage.removeItem(storageKey);
             text = localStorage.getItem(storageKey);
             delText = "Deleted note from: " + storageKey;
-            funcLine(gotText, msgType[1]);
+            funcLine(delText, msgType[1]);
         }
     } else {
         funcLine(errRead[0], msgType[2]);
@@ -296,30 +298,32 @@ function remind(flag) {
     var text = flag.split('.')[2];
     var dateInp = flag.split('.')[3];
     if (type == 'log') {
-        localStorage.setItem(dateF, text);
+        localStorage.setItem(dateInp, text);
+        var remText = "You have set a reminder for" + dateInp;
+        funcLine(dateInp, msgType[1]);
     } else if (type == 'read') {
         if (flag.split('.').length == 4) {
-            var remText="Your reminder for"+dateInp+"is:";
-            funcLine(remText,msgType[1]);
-            funcLine(localStorage.getItem(dateInp),msgType[1]);
+            var remText = "Your reminder for" + dateInp + "is:";
+            funcLine(remText, msgType[1]);
+            funcLine(localStorage.getItem(dateInp), msgType[1]);
         } else if (flag.split('.').length == 3) {
             var today = new Date();
-            var tomorrow=new Date(today);
+            var tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
-            var day=tomorrow.getDate().toString;
-            var month=tomorrow.getMonth()+1;
-            month=month.toString;
-            var year=tomorrow.getFullYear().toString;
-            var dateA = day+"/"+month+"/"+year;
-            var remText="Your reminder for tommorow is: ";
-            funcLine(remText,msgType[1]);
-            funcLine(localStorage.getItem(dateA),msgType[1]);
+            var day = tomorrow.getDate().toString;
+            var month = tomorrow.getMonth() + 1;
+            month = month.toString;
+            var year = tomorrow.getFullYear().toString;
+            var dateA = day + "/" + month + "/" + year;
+            var remText = "Your reminder for tommorow is: ";
+            funcLine(remText, msgType[1]);
+            funcLine(localStorage.getItem(dateA), msgType[1]);
         }
         else {
-            funcLine(errInp,msgType[2]);
+            funcLine(errInp, msgType[2]);
         }
     } else {
-        funcLine(errInp,msgType[2]);
+        funcLine(errInp, msgType[2]);
     }
 }
 function format(flag) {

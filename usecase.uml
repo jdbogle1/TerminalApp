@@ -1,0 +1,21 @@
+@startuml
+:user: <<Human>>
+:JavaScript: as js <<Application>>
+rectangle Console {
+  (User Input) as (in)
+  user--> (in)
+  js -up-> (out)
+  (Output) as (out)
+  (out) --> user
+  (in) --> js
+  rectangle "Local Storage" {
+    (Process Command) as (process)
+    js <--> (process)
+    (Store Data) as (store)
+    (Retrieve Data) as (get)
+    (store) --|> (process)
+    (get) --|> (process)
+
+  }
+}
+@enduml

@@ -44,3 +44,13 @@ b) no data saved to file
 **Stretch Task**
 - Add a status icon to show internet connectivity
 
+## 28th April
+**Task:**
+- connect firebase to console app
+- create a usage log of the app, in firebase, such that user activity is tracked:
+a) When application is started: time and date
+b) the time at which any command is run
+c) the command that was run and the top level detail e.g 'make a note', 'topic;
+
+## 12th May
+- Responsive design

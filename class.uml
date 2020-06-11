@@ -1,0 +1,47 @@
+@startuml
+package console <<rectangle>> {
+class userInput{
+input: string
+hitEnter()
+}
+class output{
+}
+}
+
+
+package commands <<rectangle>> {
+userInput..>initiator
+initiator..>process
+process..>output
+class initiator {
+command: string
+flags: string
+processCommand()
+}
+class process{
+storageTag:string
+index: string
+output()
+}
+class log extends process {
+text: string
+}
+class read extends process{}
+class del extends process{}
+class edit extends process{
+mode: string
+}
+class copy extends process{}
+class google extends process{}
+class remind extends process{
+mode: string
+text: string
+date: date
+}
+class format extends process {
+mode: string
+style: string
+}
+
+}
+@enduml
